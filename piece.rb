@@ -7,7 +7,7 @@ class Piece
     @color = color
   end
 
-  def on_board?(pos)
+  def self.on_board?(pos)
     pos.all? { |num| num.between?(0,7) }
   end
 

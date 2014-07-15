@@ -60,3 +60,10 @@ class Board
   end
 
 end
+
+our_board = Board.new
+
+francis = Bishop.new(our_board, [4,4], :w)
+
+p francis.moves
+p our_board
