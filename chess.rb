@@ -4,33 +4,46 @@ class Chess
 
   def initialize
     @board = Board.new
-    @turn = :b
+    @turn = :w
   end
 
   def play
 
     until over?
-      begin
-        @board.display
-        input = get_user_input
-        start_pos = input.first
-        end_pos = input.last
+      # begin
+      #   @board.display
+      #   input = get_user_input
+      #   start_pos = input.first
+      #   end_pos = input.last
+      #
 
-        unless @board[start_pos.first, start_pos.last].valid_move?(start_pos, end_pos, @turn)
-          raise ChessError "Don't move into check!"
-        end
+      #
+      #   @board.move(start_pos, end_pos)
+      # rescue ChessError
+      #   retry
+      # end
 
-        @board.move(start_pos, end_pos)
-      rescue ChessError
-        retry
+      @board.display
+      input = get_user_input
+      start_pos = input.first
+      end_pos = input.last
+
+      unless @board[start_pos.first, start_pos.last].valid_move?(start_pos, end_pos)
+        raise ChessError "Don't move into check!"
       end
+
+      @board.move(start_pos, end_pos)
 
       toggle_turn
     end
 
+    toggle_turn
+    "#{@turn} wins"
+
   end
 
   def over?
+    @board.checkmate?(@turn)
   end
 
   def toggle_turn
@@ -49,6 +62,7 @@ class Chess
       retry
     end
 
+    p [start_pos, end_pos]
     [start_pos, end_pos]
   end
 

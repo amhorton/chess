@@ -23,7 +23,6 @@ class Board
 
   def move(start_pos, end_pos)
     raise ChessError, "No piece there!" unless self[start_pos.first, start_pos.last]
-
     unless self[start_pos.first, start_pos.last].moves.include?(end_pos)
       raise ChessError, "That piece can't move there!"
     end
@@ -36,16 +35,31 @@ class Board
   end
 
   def undo_move(start_pos, end_pos)
+    self[end_pos.first, end_pos.last].position = start_pos
+
     self[start_pos.first, start_pos.last] = self[end_pos.first, end_pos.last]
+
     self[end_pos.first, end_pos.last] = @taken_pieces.pop
   end
 
   def checkmate?(color)
+    if in_check?(color)
+      @grid.each do |row|
+        row.each do |piece|
 
+          if piece && piece.color == color
+            return false if piece.moves.any? { |move| piece.valid_move?(piece.position, move)}
+          end
+        end
+      end
+
+      return true
+    end
+
+    false
   end
 
   def in_check?(color)
-
     king_pos = []
 
     @grid.each_with_index do |row, index1|
@@ -80,7 +94,7 @@ class Board
         rendered += "B " if piece.class == Bishop
         rendered += "R " if piece.class == Rook
         rendered += "P " if piece.class == Pawn
-        rendered += "** " if piece.nil?
+        rendered += "[] " if piece.nil?
       end
 
       rendered += "\n"
@@ -131,15 +145,15 @@ end
 
 
 #Checkmate state
-our_board = Board.new
-
-our_board.move([4, 6], [4, 4])
-our_board.move([5, 7], [2, 4])
-our_board.move([3, 7], [5, 5])
-our_board.move([5, 5], [5, 1])
-our_board.display
-
-p our_board[0,1].valid_move?([0,1],[0,2],:b)
+# our_board = Board.new
+#
+# our_board.move([4, 6], [4, 4])
+# our_board.move([5, 7], [2, 4])
+# our_board.move([3, 7], [5, 5])
+# our_board.move([5, 5], [5, 1])
+# our_board.display
+#
+# p our_board.checkmate?(:b)
 
 
 

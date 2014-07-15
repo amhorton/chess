@@ -11,9 +11,9 @@ class Piece
     @color = color
   end
 
-  def valid_move?(start_pos, end_pos, color)
+  def valid_move?(start_pos, end_pos)
     valid = true
-    @board.move(start_pos, end_pos)
+    @board.move(position, end_pos)
     if @board.in_check?(color)
       valid = false
     end
