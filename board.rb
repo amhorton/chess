@@ -96,11 +96,6 @@ end
 
 our_board = Board.new
 
-francis = Bishop.new(our_board, [4,4], :w)
-our_board[4,4] = francis
 
-our_board.display
-our_board.move([4,4], [1,1])
-our_board.display
-our_board.move([1,1], [4,4])
+our_board.move([1,0], [3,1])
 our_board.display

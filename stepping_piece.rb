@@ -2,13 +2,13 @@ require './piece'
 
 class SteppingPiece < Piece
 
-  def moves
-    possible_pos = DELTAS.map { |(x, y)| [x += position.first, y += position.last] }
+  def possible_moves
+    possible_pos = @deltas.map { |(x, y)| [x += position.first, y += position.last] }
     possible_pos.select { |(x, y)| x.between?(0, 7) && y.between?(0, 7) }
   end
 
-  def valid_moves
-    moves.select do |move|
+  def moves
+    possible_moves.select do |move|
       @board[move[0], move[1]].nil? || @board[move[0], move[1]].color != self.color
     end
   end
@@ -16,36 +16,32 @@ class SteppingPiece < Piece
 end
 
 class Knight < SteppingPiece
-
-  DELTAS = [
-    [-1, -2],
-    [-1, 2],
-    [-2, 1],
-    [2, 1],
-    [-2, -1],
-    [1, 2],
-    [1, -2],
-    [2, -1]
-  ]
+  def initialize(board, position, color)
+    super(board, position, color)
+    @deltas = [[-1, -2],[-1, 2],[-2, 1], [2, 1], [-2, -1], [1, 2],[1, -2],[2, -1]]
+  end
 
 end
 
 class King < SteppingPiece
-
-  DELTAS = [
-    [0, 1],
+  def initialize(board, position, color)
+    super(board, position, color)
+    @deltas = [[0, 1],
     [1, 0],
     [-1, 0],
     [0, -1],
     [-1, 1],
     [1, -1],
     [-1, -1],
-    [1, 1]
-  ]
-
+    [1, 1]]
+  end
 end
 
 class Pawn < SteppingPiece
+  def initialize(board, position, color)
+    super(board, position, color)
+    @deltas = (color == :w) ? [[0,1]] : [[0,-1]]
+  end
 
 end
 
