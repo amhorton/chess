@@ -2,7 +2,29 @@ require "./piece"
 
 class SlidingPiece < Piece
 
+  def moves
+    moves = []
 
+    DELTAS.each do |delta|
+      i = 1
+
+      while [position[0] + (delta[0] * i), position[1] + (delta[1] * i)].on_board?
+        mult_delta = delta.map { |d| d * i }
+        if @board[position[0] + mult_delta[0], position[1] + mult_delta[1]].nil?
+          moves << [position[0] + mult_delta[0], position[1] + mult_delta[1]]
+        elsif @board[position[0] + mult_delta[0], position[1] + mult_delta[1]].color != self.color
+          moves << [position[0] + mult_delta[0], position[1] + mult_delta[1]]
+          break
+        else
+          break
+        end
+
+        i += 1
+      end
+
+    end
+
+  end
 
 end
 
@@ -14,7 +36,7 @@ end
 
 
 
-  # DELTAS = []
+  # DELTAS = [[-1, -1], [1, -1], [-1, 1], [1, 1]]
 #
 #   opp_arr1 = (-7..7).to_a
 #   opp_arr2 = 7.downto(-7).to_a
