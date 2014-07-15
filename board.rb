@@ -11,6 +11,7 @@ class Board
   def initialize
     @grid = Array.new(8) { Array.new(8) }
     populate_grid
+    @taken_pieces = []
   end
 
   def [](x, y)
@@ -23,12 +24,23 @@ class Board
 
   def move(start_pos, end_pos)
     raise ChessError, "No piece there!" unless self[start_pos.first, start_pos.last]
-    raise ChessError, "That piece can't move there!" unless self[start_pos.first, start_pos.last].moves.include?(end_pos)
+
+    unless self[start_pos.first, start_pos.last].moves.include?(end_pos)
+      raise ChessError, "That piece can't move there!"
+    end
+
+    @taken_pieces << self[end_pos.first, end_pos.last]
 
     self[end_pos.first, end_pos.last] = self[start_pos.first, start_pos.last]
     self[start_pos.first, start_pos.last] = nil
     self[end_pos.first, end_pos.last].position = end_pos
   end
+
+  def undo_move(start_pos, end_pos)
+    self[start_pos.first, start_pos.last] = self[end_pos.first, end_pos.last]
+    self[end_pos.first, end_pos.last] = @taken_pieces.pop
+  end
+
 
   def in_check?(color)
 
@@ -112,23 +124,16 @@ end
 
 our_board = Board.new
 
-# francis = Pawn.new(our_board, [2, 2], :b)
-# reggie = King.new(our_board, [3,3], :w)
-# our_board[2, 4] = francis
-# our_board[3,5] = reggie
-
-francis = Knight.new(our_board, [3, 5], :b)
-our_board[3, 5] = francis
+p our_board[2, 1].moves
+our_board.move([2, 1], [2, 3])
+our_board.move([2, 3], [2, 4])
+our_board.move([2, 4], [2, 5])
 our_board.display
-p our_board.in_check?(:w)
+our_board.undo_move([2,4],[2,5])
+our_board.display
 
-# p our_board[1,1].moves
-# p francis.moves
-# p our_board.in_check?(:w)
-# p our_board.in_check?(:b)
-# our_board.display
-# our_board.move([2, 4], [2, 5])
-# our_board.display
+
+
 
 
 

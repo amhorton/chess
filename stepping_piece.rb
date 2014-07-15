@@ -8,9 +8,11 @@ class SteppingPiece < Piece
   end
 
   def moves
-    possible_moves.select do |move|
+    moves = possible_moves.select do |move|
       @board[move[0], move[1]].nil? || @board[move[0], move[1]].color != self.color
     end
+
+    moves.select { |move| valid_move?(position, move, color) }
   end
 
 end
@@ -69,6 +71,8 @@ class Pawn < Piece
     end
 
     moves
+
+    moves.select { |move| valid_move?(position, move, color) }
   end
 end
 

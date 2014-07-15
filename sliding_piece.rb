@@ -2,12 +2,10 @@ require "./piece"
 
 class SlidingPiece < Piece
 
-DELTAS = [[-1, -1], [1, -1], [-1, 1], [1, 1]]
-
   def moves
     moves = []
 
-    DELTAS.each do |delta|
+    @deltas.each do |delta|
       i = 1
 
       while Piece.on_board?([position[0] + (delta[0] * i), position[1] + (delta[1] * i)])
@@ -23,26 +21,35 @@ DELTAS = [[-1, -1], [1, -1], [-1, 1], [1, 1]]
 
         i += 1
       end
-
     end
 
-    moves
+    moves.select { |move| valid_move?(position, move, color) }
   end
 
 end
 
 
 class Bishop < SlidingPiece
-  DELTAS = [[-1, -1], [1, -1], [-1, 1], [1, 1]]
+  def initialize(board, position, color)
+    super(board, position, color)
+    @deltas = [[-1, -1], [1, -1], [-1, 1], [1, 1]]
+  end
 end
 
 
 class Rook < SlidingPiece
-  DELTAS = [[0,-1], [0,1], [1,0], [-1,0]]
+  def initialize(board, position, color)
+    super(board, position, color)
+    @deltas = [[0,-1], [0,1], [1,0], [-1,0]]
+  end
 end
 
 class Queen < SlidingPiece
-  DELTAS = [[-1, -1], [1, -1], [-1, 1], [1, 1], [0,-1], [0,1], [1,0], [-1,0]]
+  def initialize(board, position, color)
+    super(board, position, color)
+    @deltas = [[-1, -1], [1, -1], [-1, 1], [1, 1], [0,-1], [0,1], [1,0], [-1,0]]
+  end
+
 end
 
 
