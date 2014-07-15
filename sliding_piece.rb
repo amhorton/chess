@@ -23,7 +23,7 @@ class SlidingPiece < Piece
       end
     end
 
-    moves.select { |move| valid_move?(position, move, color) }
+    moves
   end
 
 end

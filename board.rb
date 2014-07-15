@@ -4,7 +4,6 @@ require './sliding_piece'
 class ChessError < StandardError
 end
 
-
 class Board
   attr_reader :grid
 
