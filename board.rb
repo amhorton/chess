@@ -96,6 +96,14 @@ end
 
 our_board = Board.new
 
-
-our_board.move([1,0], [3,1])
+francis = Pawn.new(our_board, [2, 4], :b)
+our_board[2, 4] = francis
 our_board.display
+our_board.move([2, 4], [2, 5])
+our_board.display
+p francis.moves
+
+
+
+
+
