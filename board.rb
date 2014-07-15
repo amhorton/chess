@@ -30,7 +30,23 @@ class Board
     self[end_pos.first, end_pos.last].position = end_pos
   end
 
-  def check(color)
+  def in_check?(color)
+
+    king_pos = []
+
+    @grid.each_with_index do |row, index1|
+      row.each_with_index do |piece, index2|
+        king_pos += [index2, index1] if piece.class == King && piece.color == color
+      end
+    end
+
+    @grid.each_with_index do |row, index1|
+      row.each_with_index do |piece, index2|
+        return true if piece && piece.color != color && piece.moves.include?(king_pos)
+      end
+    end
+
+    false
   end
 
   def render
@@ -96,12 +112,23 @@ end
 
 our_board = Board.new
 
-francis = Pawn.new(our_board, [2, 4], :b)
-our_board[2, 4] = francis
+# francis = Pawn.new(our_board, [2, 2], :b)
+# reggie = King.new(our_board, [3,3], :w)
+# our_board[2, 4] = francis
+# our_board[3,5] = reggie
+
+francis = Knight.new(our_board, [3, 5], :b)
+our_board[3, 5] = francis
 our_board.display
-our_board.move([2, 4], [2, 5])
-our_board.display
-p francis.moves
+p our_board.in_check?(:w)
+
+# p our_board[1,1].moves
+# p francis.moves
+# p our_board.in_check?(:w)
+# p our_board.in_check?(:b)
+# our_board.display
+# our_board.move([2, 4], [2, 5])
+# our_board.display
 
 
 
