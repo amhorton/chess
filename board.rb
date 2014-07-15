@@ -40,6 +40,9 @@ class Board
     self[end_pos.first, end_pos.last] = @taken_pieces.pop
   end
 
+  def checkmate?(color)
+
+  end
 
   def in_check?(color)
 
@@ -61,19 +64,23 @@ class Board
   end
 
   def render
-    rendered = "  0 1 2 3 4 5 6 7\n"
+    rendered = "   0  1  2  3  4  5  6  7\n"
 
     @grid.each_with_index do |row, index|
       rendered += index.to_s + " "
 
       row.each do |piece|
+        unless piece.nil?
+          rendered += (piece.color == :b) ? "b" : "w"
+        end
+
         rendered += "Q " if piece.class == Queen
         rendered += "K " if piece.class == King
         rendered += "N " if piece.class == Knight
         rendered += "B " if piece.class == Bishop
         rendered += "R " if piece.class == Rook
         rendered += "P " if piece.class == Pawn
-        rendered += "* " if piece.nil?
+        rendered += "** " if piece.nil?
       end
 
       rendered += "\n"
@@ -121,15 +128,18 @@ class Board
 
 end
 
+
+
+#Checkmate state
 our_board = Board.new
 
-p our_board[2, 1].moves
-our_board.move([2, 1], [2, 3])
-our_board.move([2, 3], [2, 4])
-our_board.move([2, 4], [2, 5])
+our_board.move([4, 6], [4, 4])
+our_board.move([5, 7], [2, 4])
+our_board.move([3, 7], [5, 5])
+our_board.move([5, 5], [5, 1])
 our_board.display
-our_board.undo_move([2,4],[2,5])
-our_board.display
+
+p our_board[0,1].valid_move?([0,1],[0,2],:b)
 
 
 
