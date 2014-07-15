@@ -1,6 +1,10 @@
 require './stepping_piece'
 require './sliding_piece'
 
+class ChessError < StandardError
+end
+
+
 class Board
   attr_reader :grid
 
@@ -9,21 +13,50 @@ class Board
     populate_grid
   end
 
-  def [](x,y)
+  def [](x, y)
     @grid[y][x]
   end
 
-  def []=(x,y, piece)
+  def []=(x, y, piece)
     @grid[y][x] = piece
   end
 
   def move(start_pos, end_pos)
+    raise ChessError, "No piece there!" unless self[start_pos.first, start_pos.last]
+    raise ChessError, "That piece can't move there!" unless self[start_pos.first, start_pos.last].moves.include?(end_pos)
+
+    self[end_pos.first, end_pos.last] = self[start_pos.first, start_pos.last]
+    self[start_pos.first, start_pos.last] = nil
+    self[end_pos.first, end_pos.last].position = end_pos
   end
 
   def check(color)
   end
 
   def render
+    rendered = "  0 1 2 3 4 5 6 7\n"
+
+    @grid.each_with_index do |row, index|
+      rendered += index.to_s + " "
+
+      row.each do |piece|
+        rendered += "Q " if piece.class == Queen
+        rendered += "K " if piece.class == King
+        rendered += "N " if piece.class == Knight
+        rendered += "B " if piece.class == Bishop
+        rendered += "R " if piece.class == Rook
+        rendered += "P " if piece.class == Pawn
+        rendered += "* " if piece.nil?
+      end
+
+      rendered += "\n"
+    end
+
+    rendered
+  end
+
+  def display
+    puts render
   end
 
   private
@@ -64,6 +97,10 @@ end
 our_board = Board.new
 
 francis = Bishop.new(our_board, [4,4], :w)
+our_board[4,4] = francis
 
-p francis.moves
-p our_board
+our_board.display
+our_board.move([4,4], [1,1])
+our_board.display
+our_board.move([1,1], [4,4])
+our_board.display
