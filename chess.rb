@@ -70,12 +70,15 @@ class Chess
         unless @board.valid_move?(start_pos, end_pos)
           raise ChessError, "Don't move into check!"
         end
+
         @board.move(start_pos, end_pos)
 
       rescue ChessError => e
         puts e.message.colorize(:blue)
         retry
       end
+
+      promote
 
       toggle_turn
 
@@ -135,6 +138,26 @@ class Chess
 
     [start_pos, end_pos]
   end
+
+  def promote
+    promotion_hash = {
+      "queen" => Queen,
+      "knight" => Knight,
+      "bishop" => Bishop,
+      "rook" => Rook
+    }
+
+    @board.grid.each do |row|
+      row.each do |piece|
+        if piece && piece.class == Pawn && (piece.position.last == 0 || piece.position.last == 7)
+          print "Pawn eligible for promotion. Please choose its new rank! "
+          new_rank = gets.chomp.downcase
+          @board[piece.position.first, piece.position.last] = promotion_hash[new_rank].new(@board, piece.position, piece.color)
+        end
+      end
+    end
+  end
+
 
   def save_game
     print "Please name your save file. "
