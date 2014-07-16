@@ -1,4 +1,5 @@
-require './stepping_piece'
+require './stepping_piece'require "stepping_piece"
+
 require './sliding_piece'
 require "colorize"
 
@@ -33,7 +34,53 @@ class Board
     self[end_pos.first, end_pos.last] = self[start_pos.first, start_pos.last]
     self[start_pos.first, start_pos.last] = nil
     self[end_pos.first, end_pos.last].position = end_pos
+    self[end_pos.first, end_pos.last].moved = true
   end
+
+  def castling_q?(color)
+    can_castle = true
+
+    if color == :w
+      if self[4,7].class != King
+        can_castle = false
+      elsif self[0,7].class != Rook
+        can_castle = false
+      elsif self[1,7] || self[2,7] || self[3,7]
+        can_castle = false
+      end
+    else
+      if self[4,0].class != King
+        can_castle = false
+      elsif self[0,0].class != Rook
+        can_castle = false
+      elsif self[1,0] || self[2,0] || self[3,0]
+        can_castle = false
+      end
+    end
+  end
+
+  def castling_k?
+    can_castle = true
+
+    if color == :w
+      if self[4,7].class != King
+        can_castle = false
+      elsif self[7,7].class != Rook
+        can_castle = false
+      elsif self[5,7] || self[6,7]
+        can_castle = false
+      end
+    else
+      if self[4,0].class != King
+        can_castle = false
+      elsif self[7,0].class != Rook
+        can_castle = false
+      elsif self[5,0] || self[6,0]
+        can_castle = false
+      end
+    end
+  end
+
 
   def checkmate?(color)
     if in_check?(color)
@@ -54,12 +101,15 @@ class Board
 
   def valid_move?(start_pos, end_pos)
     valid = true
+    has_moved = self[start_pos.first, start_pos.last].moved
+
     move(start_pos, end_pos)
     if in_check?(self[end_pos.first, end_pos.last].color)
       valid = false
     end
 
     undo_move(start_pos, end_pos)
+    self[start_pos.first, start_pos.last].moved = has_moved
     valid
   end
 

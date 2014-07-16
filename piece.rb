@@ -1,5 +1,5 @@
 class Piece
-  attr_accessor :position, :color
+  attr_accessor :position, :color, :moved
 
   def self.on_board?(pos)
     pos.all? { |num| num.between?(0,7) }
@@ -9,6 +9,7 @@ class Piece
     @board = board
     @position = position
     @color = color
+    @moved = false
   end
 
 end
