@@ -32,6 +32,21 @@ class Chess
           return
         end
 
+        if input == "castle"
+          print "Kingside or queenside? "
+          q_or_k = gets.chomp.downcase
+          if q_or_k == "kingside"
+            raise ChessError, "You can't castle!" unless @board.castling_k?(@turn)
+            @board.castle(:k, @turn)
+          elsif q_or_k == "queenside"
+            raise ChessError, "You can't castle!" unless @board.castling_q?(@turn)
+            @board.castle(:q, @turn)
+          end
+
+          toggle_turn
+          next
+        end
+
         start_pos = input.first
         end_pos = input.last
 
@@ -70,7 +85,7 @@ class Chess
     print "Enter start position, or \"save\" to save the game: "
 
     input = gets.chomp
-    return input if input == "save"
+    return input if input == "save" || input == "castle"
 
     start_pos = input.split('')
     start_pos[0] = COL[start_pos.first.downcase]

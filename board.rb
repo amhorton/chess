@@ -1,5 +1,4 @@
-require './stepping_piece'require "stepping_piece"
-
+require './stepping_piece'
 require './sliding_piece'
 require "colorize"
 
@@ -38,47 +37,129 @@ class Board
   end
 
   def castling_q?(color)
-    can_castle = true
 
     if color == :w
-      if self[4,7].class != King
-        can_castle = false
-      elsif self[0,7].class != Rook
-        can_castle = false
+      if self[4,7].class != King || self[4,7].moved == true
+        return false
+      elsif self[0,7].class != Rook || self[0,7].moved == true
+        return false
       elsif self[1,7] || self[2,7] || self[3,7]
-        can_castle = false
+        return false
       end
+
+      @grid.each do |row|
+        row.each do |piece|
+          if piece && piece.color == :b && piece.moves.any? { |move| move == [4,7] || move == [3,7] || move == [2,7] || move == [1,7] }
+            return false
+          end
+        end
+      end
+
+
     else
-      if self[4,0].class != King
-        can_castle = false
-      elsif self[0,0].class != Rook
-        can_castle = false
+      if self[4,0].class != King || self[4,0].moved == true
+        return false
+      elsif self[0,0].class != Rook || self[0,0].moved == true
+        return false
       elsif self[1,0] || self[2,0] || self[3,0]
-        can_castle = false
+        return false
       end
+
+      @grid.each do |row|
+        row.each do |piece|
+          if piece && piece.color == :b && piece.moves.any? { |move| move == [4,0] || move == [3,0] || move == [2,0] || move == [1,0] }
+            return false
+          end
+        end
+      end
+
     end
+
+    true
   end
 
-  def castling_k?
-    can_castle = true
+  def castling_k?(color)
 
     if color == :w
-      if self[4,7].class != King
-        can_castle = false
-      elsif self[7,7].class != Rook
-        can_castle = false
+      if self[4,7].class != King || self[4,7].moved == true
+        return false
+      elsif self[7,7].class != Rook || self[7,7].moved == true
+        return false
       elsif self[5,7] || self[6,7]
-        can_castle = false
+        return false
       end
+
+      @grid.each do |row|
+        row.each do |piece|
+          if piece && piece.color == :b && piece.moves.any? { |move| move == [4,7] || move == [5,7] || move == [6,7]}
+            p piece.position
+            p piece.moves
+            return false
+          end
+        end
+      end
+
     else
-      if self[4,0].class != King
-        can_castle = false
-      elsif self[7,0].class != Rook
-        can_castle = false
+      if self[4,0].class != King && self[4,0].moved == true
+        return false
+      elsif self[7,0].class != Rook && self[7,0].moved == true
+        return false
       elsif self[5,0] || self[6,0]
-        can_castle = false
+        return false
       end
+
+      @grid.each do |row|
+        row.each do |piece|
+          if piece && piece.color == :w && piece.moves.any? { |move| move == [4,0] || move == [5,0] ||  move == [6,0]}
+            return false
+          end
+        end
+      end
+
     end
+
+    true
+  end
+
+  def castle(side, color)
+    if side == :q && color == :w
+      #moves the king
+      self[2,7] = self[4,7]
+      self[4,7] = nil
+      self[2,7].position = [2,7]
+      #moves the rook
+      self[3,7] = self[0,7]
+      self[0,7] = nil
+      self[3,7].position = [3,7]
+    elsif side == :q && color == :b
+      #moves the king
+      self[2,0] = self[4,0]
+      self[4,0] = nil
+      self[2,0].position = [2,0]
+      #moves the rook
+      self[3,0] = self[0,0]
+      self[0,0] = nil
+      self[3,0].position = [3,0]
+    elsif side == :k && color == :w
+      #moves the king
+      self[6,7] = self[4,7]
+      self[4,7] = nil
+      self[6,7].position = [6,7]
+      #moves the rook
+      self[5,7] = self[7,7]
+      self[7,7] = nil
+      self[5,7].position = [5,7]
+    elsif side == :k && color == :b
+      #moves the king
+      self[6,0] = self[4,0]
+      self[4,0] = nil
+      self[6,0].position = [6,0]
+      #moves the rook
+      self[5,0] = self[7,0]
+      self[7,0] = nil
+      self[5,0].position = [5,0]
+    end
+
   end
 
 
@@ -216,6 +297,14 @@ class Board
 
 end
 
+# b = Board.new
+# b[5,7] = nil
+# b[6,7] = nil
+# b.display
+# p b.castling_k?(:w)
+# b[5,6] = Rook.new(b, [5,6], :b)
+# b.display
+# p b.castling_k?(:w)
 
 
 
