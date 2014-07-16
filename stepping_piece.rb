@@ -18,7 +18,12 @@ end
 class Knight < SteppingPiece
   def initialize(board, position, color)
     super(board, position, color)
-    @deltas = [[-1, -2],[-1, 2],[-2, 1], [2, 1], [-2, -1], [1, 2],[1, -2],[2, -1]]
+    @deltas = [
+      [-1, -2], [-1, 2],
+      [-2, 1], [2, 1],
+      [-2, -1], [1, 2],
+      [1, -2],[2, -1]
+    ]
   end
 
 end
@@ -26,14 +31,12 @@ end
 class King < SteppingPiece
   def initialize(board, position, color)
     super(board, position, color)
-    @deltas = [[0, 1],
-    [1, 0],
-    [-1, 0],
-    [0, -1],
-    [-1, 1],
-    [1, -1],
-    [-1, -1],
-    [1, 1]]
+    @deltas = [
+      [0, 1], [1, 0],
+      [-1, 0], [0, -1],
+      [-1, 1], [1, -1],
+      [-1, -1], [1, 1]
+    ]
   end
 end
 
