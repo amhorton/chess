@@ -47,6 +47,23 @@ class Chess
           next
         end
 
+        if input == "en passant"
+
+          unless @board.en_passant?(@turn)
+            raise ChessError, "You can't en passant right now!"
+          end
+
+          new_input = get_user_input
+
+          start_pos = new_input.first
+          end_pos = new_input.last
+
+          @board.en_passant(start_pos, end_pos)
+
+          toggle_turn
+          next
+        end
+
         start_pos = input.first
         end_pos = input.last
 
@@ -60,11 +77,7 @@ class Chess
         retry
       end
 
-      p @board[4,4].moved_two if @board[4,4]
-
       toggle_turn
-
-      p @board[4,4].moved_two if @board[4,4]
 
       puts "Check!".colorize(:red) if @board.in_check?(@turn)
     end
@@ -102,7 +115,7 @@ class Chess
     print "Enter start position, or \"save\" to save the game: "
 
     input = gets.chomp
-    return input if input == "save" || input == "castle"
+    return input if input == "save" || input == "castle" || input == "en passant"
 
     start_pos = input.split('')
     start_pos[0] = COL[start_pos.first.downcase]

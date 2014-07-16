@@ -168,6 +168,50 @@ class Board
 
   end
 
+  def en_passant?(color)
+    @grid.each do |row|
+      row.each do |piece|
+        if piece && piece.class == Pawn && piece.color == color
+          if (self[piece.position.first + 1, piece.position.last] &&
+             self[piece.position.first + 1, piece.position.last].class == Pawn &&
+             self[piece.position.first + 1, piece.position.last].moved_two == true) ||
+             (self[piece.position.first - 1, piece.position.last] &&
+             self[piece.position.first - 1, piece.position.last].class == Pawn &&
+             self[piece.position.first - 1, piece.position.last].moved_two == true)
+             return true
+          end
+        end
+      end
+    end
+    false
+  end
+
+  def en_passant(start_pos, end_pos)
+    if self[start_pos.first, start_pos.last].color == :b
+      unless self[end_pos.first, end_pos.last - 1] && self[end_pos.first, end_pos.last - 1].moved_two
+        raise ChessError, "Illegal en passant!"
+      end
+    else
+      unless self[end_pos.first, end_pos.last + 1] && self[end_pos.first, end_pos.last + 1].moved_two
+        raise ChessError, "Illegal en passant!"
+      end
+    end
+
+
+    self[end_pos.first, end_pos.last] = self[start_pos.first, start_pos.last]
+    self[start_pos.first, start_pos.last] = nil
+
+    self[end_pos.first, end_pos.last].position = end_pos
+    self[end_pos.first, end_pos.last].moved = true
+
+    if self[end_pos.first, end_pos.last].color == :b
+      self[end_pos.first, end_pos.last - 1] = nil
+    else
+      self[end_pos.first, end_pos.last + 1] = nil
+    end
+  end
+
+
 
   def checkmate?(color)
     if in_check?(color)
@@ -327,12 +371,6 @@ class Board
   end
 
 end
-
-b = Board.new
-b.move([4,6], [4,4])
-b.display
-p b[4,4].moved_two
-
 
 
 
