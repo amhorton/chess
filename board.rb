@@ -120,18 +120,6 @@ class Board
             rendered += "◼ "
           end
         end
-
-        # unless piece.nil?
-        #   rendered += (piece.color == :b) ? "b" : "w"
-        # end
-        #
-        # rendered += "Q " if piece.class == Queen
-        # rendered += "K " if piece.class == King
-        # rendered += "N " if piece.class == Knight
-        # rendered += "B " if piece.class == Bishop
-        # rendered += "R " if piece.class == Rook
-        # rendered += "P " if piece.class == Pawn
-        # rendered += "[] " if piece.nil?
       end
 
       rendered += "\n"
@@ -178,22 +166,6 @@ class Board
   end
 
 end
-
-
-
-#Checkmate state
-# our_board = Board.new
-#
-# our_board.move([4, 6], [4, 4])
-# our_board.move([5, 7], [2, 4])
-# our_board.move([3, 7], [5, 5])
-# our_board.move([5, 5], [5, 1])
-# our_board.display
-#
-# p our_board.checkmate?(:b)
-
-
-
 
 
 
