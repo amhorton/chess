@@ -1,5 +1,6 @@
 require "./board"
 require "colorize"
+require "yaml"
 
 class Chess
 
@@ -25,6 +26,12 @@ class Chess
       begin
         @board.display
         input = get_user_input
+
+        if input == "save"
+          save_game
+          return
+        end
+
         start_pos = input.first
         end_pos = input.last
 
@@ -48,6 +55,8 @@ class Chess
 
   end
 
+  private
+
   def over?
     @board.checkmate?(@turn)
   end
@@ -57,10 +66,13 @@ class Chess
   end
 
   def get_user_input
-    puts (@turn == :w) ? "White to move".colorize(:white) : "Black to move"
-    print "Enter start position: "
+    puts (@turn == :w) ? "White to move" : "Black to move"
+    print "Enter start position, or \"save\" to save the game: "
 
-    start_pos = gets.chomp.split('')
+    input = gets.chomp
+    return input if input == "save"
+
+    start_pos = input.split('')
     start_pos[0] = COL[start_pos.first.downcase]
     start_pos[1] = 8 - start_pos.last.to_i
 
@@ -79,9 +91,27 @@ class Chess
     [start_pos, end_pos]
   end
 
+  def save_game
+    print "Please name your save file. "
+    filename = gets.chomp.downcase
+    File.write("#{filename}.yml", YAML.dump(self))
+  end
+
+end
+
+if __FILE__ == $PROGRAM_NAME
+  print "Would you like to start a new game, or load an old game? "
+  response = gets.chomp.downcase
+  if response == "new game"
+    Chess.new.play
+  elsif response == "load game"
+    print "What's the name of your save file? "
+    filename = gets.chomp.downcase
+    YAML.load_file("#{filename}.yml").play
+  end
 end
 
 
-Chess.new.play
+
 
 
