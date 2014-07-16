@@ -31,12 +31,12 @@ class Chess
       end
 
       @board.move(start_pos, end_pos)
-
       toggle_turn
     end
 
+    @board.display
     toggle_turn
-    "#{@turn} wins"
+    puts (@turn == :w) ? "White wins!" : "Black wins!"
 
   end
 
