@@ -36,9 +36,7 @@ class Board
 
   def undo_move(start_pos, end_pos)
     self[end_pos.first, end_pos.last].position = start_pos
-
     self[start_pos.first, start_pos.last] = self[end_pos.first, end_pos.last]
-
     self[end_pos.first, end_pos.last] = @taken_pieces.pop
   end
 

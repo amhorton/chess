@@ -1,4 +1,5 @@
 require "./board"
+require "colorize"
 
 class Chess
 
@@ -33,12 +34,12 @@ class Chess
         @board.move(start_pos, end_pos)
 
       rescue ChessError => e
-        puts e.message
+        puts e.message.colorize(:blue)
         retry
       end
 
       toggle_turn
-      puts "Check" if @board.in_check?(@turn)
+      puts "Check!".colorize(:red) if @board.in_check?(@turn)
     end
 
     @board.display
@@ -56,7 +57,7 @@ class Chess
   end
 
   def get_user_input
-    puts (@turn == :w) ? "White to move" : "Black to move"
+    puts (@turn == :w) ? "White to move".colorize(:white) : "Black to move"
     print "Enter start position: "
 
     start_pos = gets.chomp.split('')
