@@ -78,10 +78,10 @@ class Board
   end
 
   def render
-    rendered = "  0 1 2 3 4 5 6 7\n"
+    rendered = "  A B C D E F G H\n"
 
     @grid.each_with_index do |row, index1|
-      rendered += index1.to_s + " "
+      rendered += (8 - index1).to_s + " "
 
       row.each_with_index do |piece, index2|
 
