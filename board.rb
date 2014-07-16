@@ -180,6 +180,23 @@ class Board
     false
   end
 
+  def stalemate?(color)
+    unless in_check?(color)
+      @grid.each do |row|
+        row.each do |piece|
+
+          if piece && piece.color == color
+            return false if piece.moves.any? { |move| valid_move?(piece.position, move)}
+          end
+        end
+      end
+
+      return true
+    end
+
+    false
+  end
+
   def valid_move?(start_pos, end_pos)
     valid = true
     has_moved = self[start_pos.first, start_pos.last].moved
@@ -297,14 +314,6 @@ class Board
 
 end
 
-# b = Board.new
-# b[5,7] = nil
-# b[6,7] = nil
-# b.display
-# p b.castling_k?(:w)
-# b[5,6] = Rook.new(b, [5,6], :b)
-# b.display
-# p b.castling_k?(:w)
 
 
 

@@ -66,14 +66,19 @@ class Chess
 
     @board.display
     toggle_turn
-    puts (@turn == :w) ? "White wins!" : "Black wins!"
+
+    if @board.stalemate?(@turn)
+      puts "Draw!"
+    else
+      puts (@turn == :w) ? "White wins!" : "Black wins!"
+    end
 
   end
 
   private
 
   def over?
-    @board.checkmate?(@turn)
+    @board.checkmate?(@turn) || @board.stalemate?(@turn)
   end
 
   def toggle_turn
