@@ -21,6 +21,10 @@ class Chess
   end
 
   def play
+    puts "Welcome to Chess!"
+    puts "Please input moves in the format of a1, b2, etc."
+    puts "If you'd like to castle or use en passant, type 'castle' or 'en passant.'"
+    puts "At the start of any turn, you can type 'save' to save your game."
 
     until over?
       begin
@@ -115,7 +119,7 @@ class Chess
 
   def get_user_input
     puts (@turn == :w) ? "White to move" : "Black to move"
-    print "Enter start position, or \"save\" to save the game: "
+    print "Enter start position: "
 
     input = gets.chomp
     return input if input == "save" || input == "castle" || input == "en passant"
