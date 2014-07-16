@@ -24,6 +24,7 @@ class Board
 
   def move(start_pos, end_pos)
     raise ChessError, "No piece there!" unless self[start_pos.first, start_pos.last]
+
     unless self[start_pos.first, start_pos.last].moves.include?(end_pos)
       raise ChessError, "That piece can't move there!"
     end
@@ -34,6 +35,11 @@ class Board
     self[start_pos.first, start_pos.last] = nil
     self[end_pos.first, end_pos.last].position = end_pos
     self[end_pos.first, end_pos.last].moved = true
+
+    if self[end_pos.first, end_pos.last].class == Pawn && (start_pos.last - end_pos.last).abs == 2
+       self[end_pos.first, end_pos.last].moved_two = true
+    end
+
   end
 
   def castling_q?(color)
@@ -200,6 +206,9 @@ class Board
   def valid_move?(start_pos, end_pos)
     valid = true
     has_moved = self[start_pos.first, start_pos.last].moved
+    if self[start_pos.first, start_pos.last].class == Pawn
+      has_moved_two = self[start_pos.first, start_pos.last].moved_two
+    end
 
     move(start_pos, end_pos)
     if in_check?(self[end_pos.first, end_pos.last].color)
@@ -207,7 +216,12 @@ class Board
     end
 
     undo_move(start_pos, end_pos)
+
     self[start_pos.first, start_pos.last].moved = has_moved
+    if self[start_pos.first, start_pos.last].class == Pawn
+      self[start_pos.first, start_pos.last].moved_two = has_moved_two
+    end
+
     valid
   end
 
@@ -313,6 +327,11 @@ class Board
   end
 
 end
+
+b = Board.new
+b.move([4,6], [4,4])
+b.display
+p b[4,4].moved_two
 
 
 

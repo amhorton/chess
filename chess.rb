@@ -60,17 +60,21 @@ class Chess
         retry
       end
 
+      p @board[4,4].moved_two if @board[4,4]
+
       toggle_turn
+
+      p @board[4,4].moved_two if @board[4,4]
+
       puts "Check!".colorize(:red) if @board.in_check?(@turn)
     end
 
     @board.display
-    toggle_turn
 
     if @board.stalemate?(@turn)
       puts "Draw!"
     else
-      puts (@turn == :w) ? "White wins!" : "Black wins!"
+      puts (@turn == :b) ? "White wins!" : "Black wins!"
     end
 
   end
@@ -82,6 +86,14 @@ class Chess
   end
 
   def toggle_turn
+    @board.grid.each do |row|
+      row.each do |piece|
+        if piece && piece.class == Pawn && piece.color != @turn
+          piece.moved_two = false
+        end
+      end
+    end
+
     @turn = (@turn == :w) ? :b : :w
   end
 

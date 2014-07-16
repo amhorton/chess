@@ -16,9 +16,12 @@ end
 
 class Pawn < Piece
 
+  attr_accessor :moved_two
+
   def initialize(board, position, color)
     super(board, position, color)
     @deltas = (color == :w) ? [-1, [-1, -1], [1, -1], -2] : [1, [1, 1] , [-1, 1], 2]
+    @moved_two = false
   end
 
   def moves
