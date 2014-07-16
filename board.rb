@@ -78,23 +78,49 @@ class Board
   end
 
   def render
-    rendered = "   0  1  2  3  4  5  6  7\n"
+    rendered = "  0 1 2 3 4 5 6 7\n"
 
-    @grid.each_with_index do |row, index|
-      rendered += index.to_s + " "
+    @grid.each_with_index do |row, index1|
+      rendered += index1.to_s + " "
 
-      row.each do |piece|
+      row.each_with_index do |piece, index2|
+
         unless piece.nil?
-          rendered += (piece.color == :b) ? "b" : "w"
+          if piece.color == :b
+            rendered += "♛ " if piece.class == Queen
+            rendered += "♚ " if piece.class == King
+            rendered += "♞ " if piece.class == Knight
+            rendered += "♝ " if piece.class == Bishop
+            rendered += "♜ " if piece.class == Rook
+            rendered += "♟ " if piece.class == Pawn
+          else
+            rendered += "♕ " if piece.class == Queen
+            rendered += "♔ " if piece.class == King
+            rendered += "♘ " if piece.class == Knight
+            rendered += "♗ " if piece.class == Bishop
+            rendered += "♖ " if piece.class == Rook
+            rendered += "♙ " if piece.class == Pawn
+          end
+        else
+          if index2 == index1 || (index2 - index1).abs == 2 ||
+             (index2 - index1).abs == 4 || (index2 - index1).abs == 6
+            rendered += "⬚ "
+          else
+            rendered += "◼ "
+          end
         end
 
-        rendered += "Q " if piece.class == Queen
-        rendered += "K " if piece.class == King
-        rendered += "N " if piece.class == Knight
-        rendered += "B " if piece.class == Bishop
-        rendered += "R " if piece.class == Rook
-        rendered += "P " if piece.class == Pawn
-        rendered += "[] " if piece.nil?
+        # unless piece.nil?
+        #   rendered += (piece.color == :b) ? "b" : "w"
+        # end
+        #
+        # rendered += "Q " if piece.class == Queen
+        # rendered += "K " if piece.class == King
+        # rendered += "N " if piece.class == Knight
+        # rendered += "B " if piece.class == Bishop
+        # rendered += "R " if piece.class == Rook
+        # rendered += "P " if piece.class == Pawn
+        # rendered += "[] " if piece.nil?
       end
 
       rendered += "\n"
