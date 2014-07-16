@@ -42,13 +42,24 @@ class Board
     self[end_pos.first, end_pos.last] = @taken_pieces.pop
   end
 
+  def valid_move?(start_pos, end_pos)
+    valid = true
+    move(start_pos, end_pos)
+    if in_check?(self[end_pos.first, end_pos.last].color)
+      valid = false
+    end
+
+    undo_move(start_pos, end_pos)
+    valid
+  end
+
   def checkmate?(color)
     if in_check?(color)
       @grid.each do |row|
         row.each do |piece|
 
           if piece && piece.color == color
-            return false if piece.moves.any? { |move| piece.valid_move?(piece.position, move)}
+            return false if piece.moves.any? { |move| valid_move?(piece.position, move)}
           end
         end
       end

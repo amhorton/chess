@@ -26,8 +26,8 @@ class Chess
       start_pos = input.first
       end_pos = input.last
 
-      unless @board[start_pos.first, start_pos.last].valid_move?(start_pos, end_pos)
-        raise ChessError "Don't move into check!"
+      unless @board.valid_move?(start_pos, end_pos)
+        raise ChessError, "Don't move into check!"
       end
 
       @board.move(start_pos, end_pos)
